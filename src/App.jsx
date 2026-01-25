@@ -94,8 +94,8 @@ function App() {
     } catch (e) {
       console.error('Route search error:', e);
       setError({
-        type: 'service_unavailable',
-        message: 'No se pudo calcular la ruta. Por favor, intenta de nuevo.',
+        type: 'route_error',
+        message: e.message || 'No se pudo calcular la ruta. Por favor, intenta de nuevo.',
         suggestions: []
       });
     } finally {
@@ -180,6 +180,14 @@ function App() {
                   </>
                 )}
               </button>
+
+              {/* Error Message */}
+              {error && !loading && (
+                <div className="mt-3 p-3 bg-red-900/20 border border-red-500/50 rounded-lg animate-in slide-in-from-top-2">
+                  <p className="text-red-400 text-sm font-semibold mb-1">⚠️ Error</p>
+                  <p className="text-red-300 text-xs">{error.message}</p>
+                </div>
+              )}
             </div>
 
             {/* Stats Summary after Search */}

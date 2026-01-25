@@ -32,6 +32,59 @@ const fetchOSRMRoute = async (start, end) => {
     return null;
 };
 
+// Helper: Calculate straight-line distance between two coordinates (Haversine formula)
+const calculateDistance = (coord1, coord2) => {
+    const R = 6371; // Earth's radius in km
+    const lat1 = coord1[0] * Math.PI / 180;
+    const lat2 = coord2[0] * Math.PI / 180;
+    const deltaLat = (coord2[0] - coord1[0]) * Math.PI / 180;
+    const deltaLon = (coord2[1] - coord1[1]) * Math.PI / 180;
+
+    const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) *
+        Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Distance in km
+};
+
+// Helper: Check if route is invalid (e.g., crossing water, different peninsulas)
+const checkInvalidRoute = (origin, destination) => {
+    const peninsularCities = {
+        'Baja California': ['Tijuana', 'Mexicali', 'Ensenada', 'Tecate'],
+        'Baja California Sur': ['La Paz', 'Los Cabos', 'Cabo San Lucas', 'San José del Cabo'],
+        'Yucatán Peninsula': ['Cancún', 'Mérida', 'Playa del Carmen', 'Tulum', 'Chetumal']
+    };
+
+    // Check if cities are in different peninsulas
+    let originPeninsula = null;
+    let destPeninsula = null;
+
+    for (const [peninsula, cities] of Object.entries(peninsularCities)) {
+        if (cities.some(city => origin.toLowerCase().includes(city.toLowerCase()))) {
+            originPeninsula = peninsula;
+        }
+        if (cities.some(city => destination.toLowerCase().includes(city.toLowerCase()))) {
+            destPeninsula = peninsula;
+        }
+    }
+
+    // Baja California and Baja California Sur can route between each other
+    if (originPeninsula && destPeninsula) {
+        if (originPeninsula !== destPeninsula) {
+            if ((originPeninsula.includes('Baja') && !destPeninsula.includes('Baja')) ||
+                (!originPeninsula.includes('Baja') && destPeninsula.includes('Baja'))) {
+                return {
+                    message: 'Esta ruta requiere cruzar el Golfo de California. Por favor, considera usar ferry o selecciona ciudades en el mismo territorio continental.'
+                };
+            }
+        }
+    }
+
+    return null;
+};
+
+
 // Helper: Slice a clear path into "safety segments" using REAL risk calculation
 const segmentizeRoute = (fullCoordinates) => {
     const totalPoints = fullCoordinates.length;
@@ -97,15 +150,25 @@ export const getSafetyRoute = async (origin, destination) => {
     // Try real API
     let routeData = await fetchOSRMRoute(startCoord, endCoord);
 
-    // ... (rest of the function uses startCoord/endCoord) ...
+    // Validate route - check if distance is unreasonably short (likely crossing water)
+    const straightLineDistance = calculateDistance(startCoord, endCoord);
 
-    // Fallback if API fails (e.g. rate limit)
-    if (!routeData) {
-        console.warn("Falling back to straight line mock");
+    // Fallback if API fails or route is invalid
+    if (!routeData || (routeData.distance < straightLineDistance * 0.8)) {
+        console.warn("OSRM returned invalid route or failed. Using fallback.");
+
+        // Check if cities are on different peninsulas/islands
+        const isInvalidRoute = checkInvalidRoute(origin, destination);
+
+        if (isInvalidRoute) {
+            throw new Error(`No se puede calcular una ruta terrestre directa entre ${origin} y ${destination}. ${isInvalidRoute.message}`);
+        }
+
+        // Generic fallback
         routeData = {
             coordinates: [startCoord, endCoord],
-            distance: 100000,
-            duration: 3600
+            distance: straightLineDistance * 1000, // Convert to meters
+            duration: (straightLineDistance * 1000) / 20 // Assume 20 m/s average
         };
     }
 
