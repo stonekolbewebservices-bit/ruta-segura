@@ -149,31 +149,15 @@ export const getSafetyRoute = async (origin, destination) => {
     if (!startCoord) startCoord = CITY_COORDS["Ciudad de México"];
     if (!endCoord) endCoord = CITY_COORDS["Guadalajara"];
 
-    // CRITICAL: Validate route BEFORE calling OSRM to prevent showing invalid routes
-    const routeValidation = checkInvalidRoute(origin, destination);
-    if (routeValidation) {
-        throw new Error(`No se puede calcular una ruta terrestre entre ${origin} y ${destination}. ${routeValidation.message}`);
-    }
-
-    // Try real API - OSRM only works for land routes
+    // Call OSRM to get real road route
     let routeData = await fetchOSRMRoute(startCoord, endCoord);
 
-    // If OSRM fails, it means there's no valid road route
+    // If OSRM fails, show error - don't draw straight lines
     if (!routeData) {
-        throw new Error(`No se pudo encontrar una ruta por carretera entre ${origin} y ${destination}. Verifica que ambas ciudades estén conectadas por carretera o intenta con otras ciudades.`);
+        throw new Error(`No se pudo calcular la ruta entre ${origin} y ${destination}. El servicio de rutas no está disponible o no existe una ruta por carretera. Por favor, intenta de nuevo más tarde.`);
     }
 
-    // Additional validation: check if route distance makes sense
-    const straightLineDistance = calculateDistance(startCoord, endCoord);
-    const routeDistanceKm = routeData.distance / 1000;
-
-    // Route should be at least 80% of straight line (accounting for curves)
-    // If much shorter, it's likely crossing water
-    if (routeDistanceKm < straightLineDistance * 0.8) {
-        console.warn(`Route distance (${routeDistanceKm}km) is suspiciously short compared to straight line (${straightLineDistance}km)`);
-        throw new Error(`La ruta calculada parece cruzar por agua. Por favor, selecciona ciudades conectadas por carretera terrestre.`);
-    }
-
+    // OSRM returns real road routes - trust it completely
     const segments = segmentizeRoute(routeData.coordinates);
     const distanceKm = Math.round(routeData.distance / 1000);
     const durationHours = Math.round(routeData.duration / 3600);
