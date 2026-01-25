@@ -50,36 +50,38 @@ const calculateDistance = (coord1, coord2) => {
 
 // Helper: Check if route is invalid (e.g., crossing water, different peninsulas)
 const checkInvalidRoute = (origin, destination) => {
-    const peninsularCities = {
-        'Baja California': ['Tijuana', 'Mexicali', 'Ensenada', 'Tecate'],
-        'Baja California Sur': ['La Paz', 'Los Cabos', 'Cabo San Lucas', 'San José del Cabo'],
-        'Yucatán Peninsula': ['Cancún', 'Mérida', 'Playa del Carmen', 'Tulum', 'Chetumal']
-    };
+    const bajaCities = ['Tijuana', 'Mexicali', 'Ensenada', 'Tecate', 'La Paz', 'Los Cabos', 'Cabo San Lucas', 'San José del Cabo', 'San Jose del Cabo'];
+    const yucatanCities = ['Cancún', 'Cancun', 'Mérida', 'Merida', 'Playa del Carmen', 'Tulum', 'Chetumal'];
 
-    // Check if cities are in different peninsulas
-    let originPeninsula = null;
-    let destPeninsula = null;
+    // Check if origin or destination is in Baja California
+    const originInBaja = bajaCities.some(city =>
+        origin.toLowerCase().includes(city.toLowerCase()) ||
+        city.toLowerCase().includes(origin.toLowerCase())
+    );
 
-    for (const [peninsula, cities] of Object.entries(peninsularCities)) {
-        if (cities.some(city => origin.toLowerCase().includes(city.toLowerCase()))) {
-            originPeninsula = peninsula;
-        }
-        if (cities.some(city => destination.toLowerCase().includes(city.toLowerCase()))) {
-            destPeninsula = peninsula;
-        }
+    const destInBaja = bajaCities.some(city =>
+        destination.toLowerCase().includes(city.toLowerCase()) ||
+        city.toLowerCase().includes(destination.toLowerCase())
+    );
+
+    // If one is in Baja and the other is not, it requires crossing water
+    if ((originInBaja && !destInBaja) || (!originInBaja && destInBaja)) {
+        return {
+            message: 'Esta ruta requiere cruzar el Golfo de California en ferry. OSRM no puede calcular rutas que incluyan ferry. Por favor, selecciona ciudades en el mismo territorio continental.'
+        };
     }
 
-    // Baja California and Baja California Sur can route between each other
-    if (originPeninsula && destPeninsula) {
-        if (originPeninsula !== destPeninsula) {
-            if ((originPeninsula.includes('Baja') && !destPeninsula.includes('Baja')) ||
-                (!originPeninsula.includes('Baja') && destPeninsula.includes('Baja'))) {
-                return {
-                    message: 'Esta ruta requiere cruzar el Golfo de California. Por favor, considera usar ferry o selecciona ciudades en el mismo territorio continental.'
-                };
-            }
-        }
-    }
+    // Check for Yucatan peninsula (less critical, but still worth noting)
+    const originInYucatan = yucatanCities.some(city =>
+        origin.toLowerCase().includes(city.toLowerCase())
+    );
+
+    const destInYucatan = yucatanCities.some(city =>
+        destination.toLowerCase().includes(city.toLowerCase())
+    );
+
+    // Yucatan is connected by land, so this is just informational
+    // We don't block it, but could add a note if needed
 
     return null;
 };
@@ -147,29 +149,29 @@ export const getSafetyRoute = async (origin, destination) => {
     if (!startCoord) startCoord = CITY_COORDS["Ciudad de México"];
     if (!endCoord) endCoord = CITY_COORDS["Guadalajara"];
 
-    // Try real API
+    // CRITICAL: Validate route BEFORE calling OSRM to prevent showing invalid routes
+    const routeValidation = checkInvalidRoute(origin, destination);
+    if (routeValidation) {
+        throw new Error(`No se puede calcular una ruta terrestre entre ${origin} y ${destination}. ${routeValidation.message}`);
+    }
+
+    // Try real API - OSRM only works for land routes
     let routeData = await fetchOSRMRoute(startCoord, endCoord);
 
-    // Validate route - check if distance is unreasonably short (likely crossing water)
+    // If OSRM fails, it means there's no valid road route
+    if (!routeData) {
+        throw new Error(`No se pudo encontrar una ruta por carretera entre ${origin} y ${destination}. Verifica que ambas ciudades estén conectadas por carretera o intenta con otras ciudades.`);
+    }
+
+    // Additional validation: check if route distance makes sense
     const straightLineDistance = calculateDistance(startCoord, endCoord);
+    const routeDistanceKm = routeData.distance / 1000;
 
-    // Fallback if API fails or route is invalid
-    if (!routeData || (routeData.distance < straightLineDistance * 0.8)) {
-        console.warn("OSRM returned invalid route or failed. Using fallback.");
-
-        // Check if cities are on different peninsulas/islands
-        const isInvalidRoute = checkInvalidRoute(origin, destination);
-
-        if (isInvalidRoute) {
-            throw new Error(`No se puede calcular una ruta terrestre directa entre ${origin} y ${destination}. ${isInvalidRoute.message}`);
-        }
-
-        // Generic fallback
-        routeData = {
-            coordinates: [startCoord, endCoord],
-            distance: straightLineDistance * 1000, // Convert to meters
-            duration: (straightLineDistance * 1000) / 20 // Assume 20 m/s average
-        };
+    // Route should be at least 80% of straight line (accounting for curves)
+    // If much shorter, it's likely crossing water
+    if (routeDistanceKm < straightLineDistance * 0.8) {
+        console.warn(`Route distance (${routeDistanceKm}km) is suspiciously short compared to straight line (${straightLineDistance}km)`);
+        throw new Error(`La ruta calculada parece cruzar por agua. Por favor, selecciona ciudades conectadas por carretera terrestre.`);
     }
 
     const segments = segmentizeRoute(routeData.coordinates);
