@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Implementación - Ruta Segura</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 40px; color: #333; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: #e67e22; margin-top: 30px; }
+        h3 { color: #34495e; }
+        .alert { padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 5px solid; }
+        .alert-important { background-color: #e8f4f8; border-color: #3498db; color: #2980b9; }
+        .alert-note { background-color: #f9f9f9; border-color: #95a5a6; color: #7f8c8d; }
+        ul { margin-bottom: 20px; }
+        li { margin-bottom: 5px; }
+        code { background-color: #f8f9fa; padding: 2px 5px; border-radius: 3px; font-family: Consolas, monospace; color: #e83e8c; }
+    </style>
+</head>
+<body>
+    <h1>Ruta Segura - Plan de Implementación</h1>
+
+    <h2>Descripción del Objetivo</h2>
+    <p>Crear una aplicación web que ayude a los viajeros a planificar rutas seguras. La app mostrará un mapa estilizado donde las rutas se colorean según métricas de seguridad (datos simulados/reales). Incluirá funciones para ver estadísticas detalladas de delincuencia en ciudades a lo largo de la ruta. El objetivo es un MVP con estética "premium" (tipo videojuego/Strava) autosostenible mediante AdSense.</p>
+
+    <h2>Revisión del Usuario Requerida</h2>
+    <div class="alert alert-important">
+        <strong>IMPORTANTE - Fuentes de Datos:</strong> Los datos reales de crimen (secuestros, etc.) son difíciles de obtener gratuitamente y en tiempo real vía API pública. Para este MVP, usaremos <strong>Datos Simulados (Mock Data)</strong> para demostrar la funcionalidad y la interfaz. Podremos explorar APIs reales (gobierno, etc.) en el futuro.
+    </div>
+
+    <div class="alert alert-note">
+        <strong>Motor de Mapas:</strong> Para mantener el costo en $0, usaremos <strong>Leaflet</strong> con datos de OpenStreetMap y una capa de estilo "Dark Mode" personalizada. Evitaremos Google Maps API por ahora ya que requiere tarjeta de crédito y tiene costos.
+    </div>
+
+    <h2>Cambios Propuestos</h2>
+
+    <h3>Tecnología Principal</h3>
+    <ul>
+        <li><strong>Framework:</strong> React (Vite) para rendimiento.</li>
+        <li><strong>Estilo:</strong> Tailwind CSS para diseño moderno y rápido.</li>
+        <li><strong>Mapas:</strong> <code>react-leaflet</code> + <code>leaflet</code>.</li>
+        <li><strong>Rutas:</strong> Cálculo de rutas simulado o usando OSRM demo para el prototipo.</li>
+    </ul>
+
+    <h3>Arquitectura</h3>
+    <h4>Diseño (UI/UX)</h4>
+    <ul>
+        <li><strong>Layout Principal:</strong> Mapa a pantalla completa como fondo.</li>
+        <li><strong>Estilo de Mapa:</strong> "Dark Matter" o "Cyberpunk" (tonos oscuros y neón).</li>
+        <li><strong>Indicadores:</strong> Rutas verdes (seguras) a rojas (peligrosas).</li>
+    </ul>
+
+    <h4>Capa de Datos</h4>
+    <ul>
+        <li><strong>Servicio Mock:</strong> Funciones que devuelven puntuaciones de seguridad aleatorias pero consistentes para las demos.</li>
+        <li><strong>Tarjetas de Estadísticas:</strong> Paneles deslizables con datos de homicidios, asaltos, etc.</li>
+    </ul>
+
+    <h3>Estructura de Archivos</h3>
+    <pre>
+src/
+  components/
+    Map/      (Lógica del mapa)
+    UI/       (Buscadores, Tarjetas de info)
+  services/   (Datos simulados, Rutas)
+  assets/     (Iconos, Estilos)
+    </pre>
+
+    <h2>Plan de Verificación</h2>
+    <ol>
+        <li>Abrir la app en el navegador.</li>
+        <li>Ingresar Origen (ej. CDMX) y Destino (ej. Guadalajara).</li>
+        <li>Verificar que la ruta se dibuja y cambia de color.</li>
+        <li>Hacer click en los marcadores de ciudades para ver las "stats" de seguridad.</li>
+        <li>Probar la vista en modo móvil (responsive).</li>
+    </ol>
+</body>
+</html>

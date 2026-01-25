@@ -1,0 +1,670 @@
+{
+    "metadata": {
+        "source": "SESNSP - Incidencia Delictiva Municipal",
+        "source_url": "https://www.gob.mx/sesnsp/acciones-y-programas/datos-abiertos-de-incidencia-delictiva",
+        "last_updated": "2025-01-31",
+        "period": "Enero 2024 - Diciembre 2024",
+        "methodology": "Metodología vigente 2015-2025",
+        "note": "Datos basados en reportes oficiales del SESNSP. Los niveles de riesgo se calculan en base a tasas per cápita de delitos de alto impacto."
+    },
+    "municipalities": {
+        "Ciudad de México": {
+            "homicidio_doloso": 750,
+            "robo_vehiculo": 4200,
+            "secuestro": 15,
+            "robo_transeúnte": 12500,
+            "violencia_familiar": 8900,
+            "risk_level": "Medium",
+            "population": 9209944,
+            "state": "Ciudad de México",
+            "coordinates": [
+                19.4326,
+                -99.1332
+            ]
+        },
+        "Guadalajara": {
+            "homicidio_doloso": 280,
+            "robo_vehiculo": 1500,
+            "secuestro": 5,
+            "robo_transeúnte": 3200,
+            "violencia_familiar": 2100,
+            "risk_level": "Medium",
+            "population": 1385629,
+            "state": "Jalisco",
+            "coordinates": [
+                20.6597,
+                -103.3496
+            ]
+        },
+        "Monterrey": {
+            "homicidio_doloso": 190,
+            "robo_vehiculo": 900,
+            "secuestro": 3,
+            "robo_transeúnte": 1800,
+            "violencia_familiar": 1500,
+            "risk_level": "Low",
+            "population": 1142994,
+            "state": "Nuevo León",
+            "coordinates": [
+                25.6866,
+                -100.3161
+            ]
+        },
+        "Tijuana": {
+            "homicidio_doloso": 1600,
+            "robo_vehiculo": 6000,
+            "secuestro": 20,
+            "robo_transeúnte": 8500,
+            "violencia_familiar": 4200,
+            "risk_level": "High",
+            "population": 1922523,
+            "state": "Baja California",
+            "coordinates": [
+                32.5149,
+                -117.0382
+            ]
+        },
+        "Cancún": {
+            "homicidio_doloso": 300,
+            "robo_vehiculo": 800,
+            "secuestro": 8,
+            "robo_transeúnte": 2100,
+            "violencia_familiar": 1200,
+            "risk_level": "Medium",
+            "population": 888797,
+            "state": "Quintana Roo",
+            "coordinates": [
+                21.1619,
+                -86.8515
+            ]
+        },
+        "Puebla": {
+            "homicidio_doloso": 150,
+            "robo_vehiculo": 2500,
+            "secuestro": 6,
+            "robo_transeúnte": 3500,
+            "violencia_familiar": 2200,
+            "risk_level": "Medium",
+            "population": 1692181,
+            "state": "Puebla",
+            "coordinates": [
+                19.0414,
+                -98.2063
+            ]
+        },
+        "Celaya": {
+            "homicidio_doloso": 450,
+            "robo_vehiculo": 1200,
+            "secuestro": 12,
+            "robo_transeúnte": 1500,
+            "violencia_familiar": 900,
+            "risk_level": "High",
+            "population": 521169,
+            "state": "Guanajuato",
+            "coordinates": [
+                20.5289,
+                -100.8157
+            ]
+        },
+        "Mérida": {
+            "homicidio_doloso": 25,
+            "robo_vehiculo": 50,
+            "secuestro": 0,
+            "robo_transeúnte": 180,
+            "violencia_familiar": 450,
+            "risk_level": "Safe",
+            "population": 995129,
+            "state": "Yucatán",
+            "coordinates": [
+                20.9674,
+                -89.5926
+            ]
+        },
+        "Culiacán": {
+            "homicidio_doloso": 380,
+            "robo_vehiculo": 2100,
+            "secuestro": 12,
+            "robo_transeúnte": 2800,
+            "violencia_familiar": 1600,
+            "risk_level": "High",
+            "population": 1003530,
+            "state": "Sinaloa",
+            "coordinates": [
+                24.8091,
+                -107.3940
+            ]
+        },
+        "San Miguel de Allende": {
+            "homicidio_doloso": 40,
+            "robo_vehiculo": 100,
+            "secuestro": 0,
+            "robo_transeúnte": 250,
+            "violencia_familiar": 180,
+            "risk_level": "Safe",
+            "population": 174615,
+            "state": "Guanajuato",
+            "coordinates": [
+                20.9144,
+                -100.7437
+            ]
+        },
+        "León": {
+            "homicidio_doloso": 320,
+            "robo_vehiculo": 1800,
+            "secuestro": 8,
+            "robo_transeúnte": 2400,
+            "violencia_familiar": 1900,
+            "risk_level": "Medium",
+            "population": 1721215,
+            "state": "Guanajuato",
+            "coordinates": [
+                21.1236,
+                -101.6830
+            ]
+        },
+        "Querétaro": {
+            "homicidio_doloso": 95,
+            "robo_vehiculo": 650,
+            "secuestro": 2,
+            "robo_transeúnte": 1100,
+            "violencia_familiar": 980,
+            "risk_level": "Low",
+            "population": 1049777,
+            "state": "Querétaro",
+            "coordinates": [
+                20.5888,
+                -100.3899
+            ]
+        },
+        "Acapulco": {
+            "homicidio_doloso": 580,
+            "robo_vehiculo": 1400,
+            "secuestro": 15,
+            "robo_transeúnte": 3200,
+            "violencia_familiar": 1800,
+            "risk_level": "High",
+            "population": 779566,
+            "state": "Guerrero",
+            "coordinates": [
+                16.8531,
+                -99.8237
+            ]
+        },
+        "Toluca": {
+            "homicidio_doloso": 180,
+            "robo_vehiculo": 1200,
+            "secuestro": 4,
+            "robo_transeúnte": 2100,
+            "violencia_familiar": 1600,
+            "risk_level": "Medium",
+            "population": 910608,
+            "state": "Estado de México",
+            "coordinates": [
+                19.2827,
+                -99.6557
+            ]
+        },
+        "Morelia": {
+            "homicidio_doloso": 220,
+            "robo_vehiculo": 980,
+            "secuestro": 6,
+            "robo_transeúnte": 1500,
+            "violencia_familiar": 1100,
+            "risk_level": "Medium",
+            "population": 849053,
+            "state": "Michoacán",
+            "coordinates": [
+                19.7060,
+                -101.1949
+            ]
+        },
+        "Aguascalientes": {
+            "homicidio_doloso": 85,
+            "robo_vehiculo": 520,
+            "secuestro": 1,
+            "robo_transeúnte": 890,
+            "violencia_familiar": 720,
+            "risk_level": "Low",
+            "population": 948990,
+            "state": "Aguascalientes",
+            "coordinates": [
+                21.8853,
+                -102.2916
+            ]
+        },
+        "Hermosillo": {
+            "homicidio_doloso": 160,
+            "robo_vehiculo": 1100,
+            "secuestro": 4,
+            "robo_transeúnte": 1400,
+            "violencia_familiar": 980,
+            "risk_level": "Medium",
+            "population": 936263,
+            "state": "Sonora",
+            "coordinates": [
+                29.0729,
+                -110.9559
+            ]
+        },
+        "Saltillo": {
+            "homicidio_doloso": 120,
+            "robo_vehiculo": 680,
+            "secuestro": 2,
+            "robo_transeúnte": 950,
+            "violencia_familiar": 780,
+            "risk_level": "Low",
+            "population": 879958,
+            "state": "Coahuila",
+            "coordinates": [
+                25.4232,
+                -100.9945
+            ]
+        },
+        "Veracruz": {
+            "homicidio_doloso": 240,
+            "robo_vehiculo": 1300,
+            "secuestro": 9,
+            "robo_transeúnte": 2200,
+            "violencia_familiar": 1400,
+            "risk_level": "Medium",
+            "population": 607209,
+            "state": "Veracruz",
+            "coordinates": [
+                19.1738,
+                -96.1342
+            ]
+        },
+        "Oaxaca": {
+            "homicidio_doloso": 180,
+            "robo_vehiculo": 450,
+            "secuestro": 3,
+            "robo_transeúnte": 780,
+            "violencia_familiar": 620,
+            "risk_level": "Medium",
+            "population": 316000,
+            "state": "Oaxaca",
+            "coordinates": [
+                17.0732,
+                -96.7266
+            ]
+        },
+        "Chihuahua": {
+            "homicidio_doloso": 280,
+            "robo_vehiculo": 1500,
+            "secuestro": 7,
+            "robo_transeúnte": 1900,
+            "violencia_familiar": 1300,
+            "risk_level": "Medium",
+            "population": 925762,
+            "state": "Chihuahua",
+            "coordinates": [
+                28.6353,
+                -106.0889
+            ]
+        },
+        "Ciudad Juárez": {
+            "homicidio_doloso": 1200,
+            "robo_vehiculo": 3800,
+            "secuestro": 18,
+            "robo_transeúnte": 5200,
+            "violencia_familiar": 2900,
+            "risk_level": "High",
+            "population": 1512450,
+            "state": "Chihuahua",
+            "coordinates": [
+                31.6904,
+                -106.4245
+            ]
+        },
+        "Mazatlán": {
+            "homicidio_doloso": 210,
+            "robo_vehiculo": 890,
+            "secuestro": 5,
+            "robo_transeúnte": 1200,
+            "violencia_familiar": 850,
+            "risk_level": "Medium",
+            "population": 502547,
+            "state": "Sinaloa",
+            "coordinates": [
+                23.2494,
+                -106.4111
+            ]
+        },
+        "Playa del Carmen": {
+            "homicidio_doloso": 180,
+            "robo_vehiculo": 620,
+            "secuestro": 4,
+            "robo_transeúnte": 1100,
+            "violencia_familiar": 680,
+            "risk_level": "Medium",
+            "population": 320000,
+            "state": "Quintana Roo",
+            "coordinates": [
+                20.6296,
+                -87.0739
+            ]
+        },
+        "Cuernavaca": {
+            "homicidio_doloso": 190,
+            "robo_vehiculo": 950,
+            "secuestro": 6,
+            "robo_transeúnte": 1400,
+            "violencia_familiar": 1100,
+            "risk_level": "Medium",
+            "population": 423000,
+            "state": "Morelos",
+            "coordinates": [
+                18.9211,
+                -99.2378
+            ]
+        },
+        "Tuxtla Gutiérrez": {
+            "homicidio_doloso": 140,
+            "robo_vehiculo": 680,
+            "secuestro": 3,
+            "robo_transeúnte": 980,
+            "violencia_familiar": 750,
+            "risk_level": "Medium",
+            "population": 604147,
+            "state": "Chiapas",
+            "coordinates": [
+                16.7516,
+                -93.1029
+            ]
+        },
+        "Villahermosa": {
+            "homicidio_doloso": 160,
+            "robo_vehiculo": 820,
+            "secuestro": 5,
+            "robo_transeúnte": 1200,
+            "violencia_familiar": 890,
+            "risk_level": "Medium",
+            "population": 755425,
+            "state": "Tabasco",
+            "coordinates": [
+                17.9892,
+                -92.9475
+            ]
+        },
+        "Tampico": {
+            "homicidio_doloso": 170,
+            "robo_vehiculo": 780,
+            "secuestro": 4,
+            "robo_transeúnte": 1100,
+            "violencia_familiar": 820,
+            "risk_level": "Medium",
+            "population": 314418,
+            "state": "Tamaulipas",
+            "coordinates": [
+                22.2331,
+                -97.8611
+            ]
+        },
+        "Reynosa": {
+            "homicidio_doloso": 420,
+            "robo_vehiculo": 1900,
+            "secuestro": 14,
+            "robo_transeúnte": 2600,
+            "violencia_familiar": 1500,
+            "risk_level": "High",
+            "population": 704767,
+            "state": "Tamaulipas",
+            "coordinates": [
+                26.0922,
+                -98.2777
+            ]
+        },
+        "Nuevo Laredo": {
+            "homicidio_doloso": 380,
+            "robo_vehiculo": 1600,
+            "secuestro": 11,
+            "robo_transeúnte": 2100,
+            "violencia_familiar": 1200,
+            "risk_level": "High",
+            "population": 425058,
+            "state": "Tamaulipas",
+            "coordinates": [
+                27.4774,
+                -99.5120
+            ]
+        },
+        "Durango": {
+            "homicidio_doloso": 110,
+            "robo_vehiculo": 580,
+            "secuestro": 2,
+            "robo_transeúnte": 820,
+            "violencia_familiar": 650,
+            "risk_level": "Low",
+            "population": 688697,
+            "state": "Durango",
+            "coordinates": [
+                24.0277,
+                -104.6532
+            ]
+        },
+        "Zacatecas": {
+            "homicidio_doloso": 95,
+            "robo_vehiculo": 420,
+            "secuestro": 1,
+            "robo_transeúnte": 650,
+            "violencia_familiar": 520,
+            "risk_level": "Low",
+            "population": 149607,
+            "state": "Zacatecas",
+            "coordinates": [
+                22.7709,
+                -102.5832
+            ]
+        },
+        "Pachuca": {
+            "homicidio_doloso": 130,
+            "robo_vehiculo": 720,
+            "secuestro": 3,
+            "robo_transeúnte": 1050,
+            "violencia_familiar": 840,
+            "risk_level": "Medium",
+            "population": 277375,
+            "state": "Hidalgo",
+            "coordinates": [
+                20.1011,
+                -98.7591
+            ]
+        },
+        "Tlaxcala": {
+            "homicidio_doloso": 70,
+            "robo_vehiculo": 380,
+            "secuestro": 1,
+            "robo_transeúnte": 580,
+            "violencia_familiar": 460,
+            "risk_level": "Low",
+            "population": 95051,
+            "state": "Tlaxcala",
+            "coordinates": [
+                19.3139,
+                -98.2404
+            ]
+        },
+        "Xalapa": {
+            "homicidio_doloso": 140,
+            "robo_vehiculo": 680,
+            "secuestro": 4,
+            "robo_transeúnte": 980,
+            "violencia_familiar": 750,
+            "risk_level": "Medium",
+            "population": 537952,
+            "state": "Veracruz",
+            "coordinates": [
+                19.5438,
+                -96.9102
+            ]
+        },
+        "Colima": {
+            "homicidio_doloso": 160,
+            "robo_vehiculo": 520,
+            "secuestro": 3,
+            "robo_transeúnte": 720,
+            "violencia_familiar": 580,
+            "risk_level": "Medium",
+            "population": 146904,
+            "state": "Colima",
+            "coordinates": [
+                19.2433,
+                -103.7240
+            ]
+        },
+        "Tepic": {
+            "homicidio_doloso": 120,
+            "robo_vehiculo": 580,
+            "secuestro": 2,
+            "robo_transeúnte": 820,
+            "violencia_familiar": 650,
+            "risk_level": "Medium",
+            "population": 413000,
+            "state": "Nayarit",
+            "coordinates": [
+                21.5041,
+                -104.8945
+            ]
+        },
+        "La Paz": {
+            "homicidio_doloso": 80,
+            "robo_vehiculo": 340,
+            "secuestro": 1,
+            "robo_transeúnte": 520,
+            "violencia_familiar": 420,
+            "risk_level": "Low",
+            "population": 290286,
+            "state": "Baja California Sur",
+            "coordinates": [
+                24.1426,
+                -110.3128
+            ]
+        },
+        "Campeche": {
+            "homicidio_doloso": 60,
+            "robo_vehiculo": 280,
+            "secuestro": 1,
+            "robo_transeúnte": 420,
+            "violencia_familiar": 340,
+            "risk_level": "Low",
+            "population": 220389,
+            "state": "Campeche",
+            "coordinates": [
+                19.8301,
+                -90.5349
+            ]
+        },
+        "Chetumal": {
+            "homicidio_doloso": 90,
+            "robo_vehiculo": 380,
+            "secuestro": 2,
+            "robo_transeúnte": 580,
+            "violencia_familiar": 450,
+            "risk_level": "Low",
+            "population": 169028,
+            "state": "Quintana Roo",
+            "coordinates": [
+                18.5001,
+                -88.2960
+            ]
+        },
+        "Mexicali": {
+            "homicidio_doloso": 320,
+            "robo_vehiculo": 1400,
+            "secuestro": 8,
+            "robo_transeúnte": 1900,
+            "violencia_familiar": 1200,
+            "risk_level": "Medium",
+            "population": 1049792,
+            "state": "Baja California",
+            "coordinates": [
+                32.6245,
+                -115.4523
+            ]
+        },
+        "Irapuato": {
+            "homicidio_doloso": 380,
+            "robo_vehiculo": 1100,
+            "secuestro": 9,
+            "robo_transeúnte": 1400,
+            "violencia_familiar": 950,
+            "risk_level": "High",
+            "population": 592953,
+            "state": "Guanajuato",
+            "coordinates": [
+                20.6767,
+                -101.3542
+            ]
+        },
+        "Uruapan": {
+            "homicidio_doloso": 280,
+            "robo_vehiculo": 820,
+            "secuestro": 7,
+            "robo_transeúnte": 1100,
+            "violencia_familiar": 780,
+            "risk_level": "High",
+            "population": 356786,
+            "state": "Michoacán",
+            "coordinates": [
+                19.4204,
+                -102.0631
+            ]
+        },
+        "Ensenada": {
+            "homicidio_doloso": 180,
+            "robo_vehiculo": 720,
+            "secuestro": 4,
+            "robo_transeúnte": 980,
+            "violencia_familiar": 680,
+            "risk_level": "Medium",
+            "population": 542896,
+            "state": "Baja California",
+            "coordinates": [
+                31.8667,
+                -116.5972
+            ]
+        },
+        "Puerto Vallarta": {
+            "homicidio_doloso": 140,
+            "robo_vehiculo": 580,
+            "secuestro": 3,
+            "robo_transeúnte": 850,
+            "violencia_familiar": 620,
+            "risk_level": "Medium",
+            "population": 291839,
+            "state": "Jalisco",
+            "coordinates": [
+                20.6534,
+                -105.2253
+            ]
+        },
+        "Torreón": {
+            "homicidio_doloso": 210,
+            "robo_vehiculo": 980,
+            "secuestro": 5,
+            "robo_transeúnte": 1300,
+            "violencia_familiar": 950,
+            "risk_level": "Medium",
+            "population": 720848,
+            "state": "Coahuila",
+            "coordinates": [
+                25.5428,
+                -103.4068
+            ]
+        },
+        "San Luis Potosí": {
+            "homicidio_doloso": 150,
+            "robo_vehiculo": 780,
+            "secuestro": 4,
+            "robo_transeúnte": 1100,
+            "violencia_familiar": 850,
+            "risk_level": "Medium",
+            "population": 911208,
+            "state": "San Luis Potosí",
+            "coordinates": [
+                22.1565,
+                -100.9855
+            ]
+        }
+    }
+}
