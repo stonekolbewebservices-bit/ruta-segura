@@ -8,28 +8,35 @@ export const CITY_COORDS = cities;
 // Helper: Fetch from OSRM
 const fetchOSRMRoute = async (start, end) => {
     // OSRM expects lon,lat (GeoJSON format)
-    const url = `http://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`;
+    // Using HTTPS to prevent mixed content errors in production
+    const url = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`;
 
     try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error("OSRM Fetch Failed");
+        if (!response.ok) {
+            console.error(`OSRM HTTP Error: ${response.status} ${response.statusText}`);
+            throw new Error(`OSRM Fetch Failed: ${response.status}`);
+        }
         const data = await response.json();
 
         if (data.routes && data.routes.length > 0) {
             const route = data.routes[0];
             // OSRM returns [lon, lat], Leaflet needs [lat, lon]
             const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+            console.log(`✓ Route calculated: ${Math.round(route.distance / 1000)}km, ${Math.round(route.duration / 60)}min`);
             return {
                 coordinates,
                 distance: route.distance, // in meters
                 duration: route.duration // in seconds
             };
+        } else {
+            console.error("OSRM returned no routes");
+            return null;
         }
     } catch (error) {
-        console.error("Routing Error:", error);
+        console.error("Routing Error:", error.message || error);
         return null;
     }
-    return null;
 };
 
 // Helper: Calculate straight-line distance between two coordinates (Haversine formula)
