@@ -5,7 +5,7 @@ import CityAutocomplete from './components/UI/CityAutocomplete';
 import AdSenseUnit from './components/UI/AdSenseUnit';
 import ContactButton from './components/UI/ContactButton';
 import ContactModal from './components/UI/ContactModal';
-import { ShieldCheck, Search, AlertTriangle, Info } from 'lucide-react';
+import { ShieldCheck, Search, AlertTriangle, Info, Menu, X } from 'lucide-react';
 import { getSafetyRoute, CITY_COORDS } from './services/mockSafetyService';
 import classNames from 'classnames';
 import LoadingProgress from './components/UI/LoadingProgress';
@@ -56,6 +56,7 @@ function App() {
   const [destination, setDestination] = useState("Guadalajara");
   const [selectedCity, setSelectedCity] = useState(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Get list of city names for autocomplete
   const cityList = Object.keys(CITY_COORDS);
@@ -134,13 +135,33 @@ function App() {
             </div>
           </div>
 
-          <div className="pointer-events-auto bg-dark-card/80 backdrop-blur-md px-4 py-2 rounded-full">
+          <div className="pointer-events-auto bg-dark-card/80 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2">
+            {/* Hamburger Menu Button - Mobile Only */}
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
             <span className="text-xs font-mono text-safety-warning">BETA</span>
           </div>
         </div>
 
-        {/* Floating Action / Search Container */}
-        <div className="absolute bottom-6 left-4 right-4 z-20 pointer-events-auto md:left-6 md:right-auto md:w-96">
+        {/* Mobile Overlay - appears when sidebar is open */}
+        {isSidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-black/60 z-30 backdrop-blur-sm"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        {/* Floating Action / Search Container - Responsive Sidebar */}
+        <div className={classNames(
+          "fixed bottom-0 left-0 right-0 z-40 pointer-events-auto transition-transform duration-300 ease-in-out",
+          "md:absolute md:bottom-6 md:left-6 md:right-auto md:w-96 md:translate-x-0",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        )}>
           <div className="bg-dark-card/95 backdrop-blur-xl p-4 rounded-2xl shadow-xl transition-all duration-300 max-h-[80vh] overflow-y-auto">
             <div className="space-y-3">
               <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-widest text-xs mb-2">Planificar Viaje</h2>
@@ -165,7 +186,10 @@ function App() {
               </div>
 
               <button
-                onClick={handleSearch}
+                onClick={() => {
+                  handleSearch();
+                  setIsSidebarOpen(false); // Close sidebar on mobile after search
+                }}
                 disabled={loading}
                 className={classNames(
                   "w-full font-bold py-3 rounded-lg shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2",
@@ -210,6 +234,30 @@ function App() {
                     <div className="font-mono text-lg text-safety-safe">{routeData.stats.safetyScore}/100</div>
                   </div>
                 </div>
+
+                {/* Crime Rate Statistics per 100k */}
+                {routeData.stats.crimeRates && (
+                  <div className="mt-3 bg-black/40 p-3 rounded">
+                    <div className="text-xs text-gray-400 mb-2 flex items-center gap-1">
+                      <Info className="w-3 h-3" />
+                      <span>Tasas por 100k habitantes</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      <div>
+                        <div className="text-gray-500">Robos</div>
+                        <div className="font-mono text-white">{routeData.stats.crimeRates.robberies || 'N/A'}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Homicidios</div>
+                        <div className="font-mono text-white">{routeData.stats.crimeRates.homicides || 'N/A'}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Secuestros</div>
+                        <div className="font-mono text-white">{routeData.stats.crimeRates.kidnappings || 'N/A'}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

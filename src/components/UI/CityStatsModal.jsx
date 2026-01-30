@@ -2,17 +2,47 @@ import React from 'react';
 import { X, AlertTriangle, Shield, Skull, Share2, BarChart3 } from 'lucide-react';
 import classNames from 'classnames';
 
-const StatRow = ({ icon: Icon, label, value, colorClass }) => (
-    <div className="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-white/5">
-        <div className="flex items-center gap-3">
-            <div className={classNames("p-2 rounded-full bg-opacity-20", colorClass.replace('text-', 'bg-'))}>
-                <Icon className={classNames("w-5 h-5", colorClass)} />
+const StatRow = ({ icon: Icon, label, value, colorClass, level }) => {
+    // Format number with thousand separators
+    const formattedValue = typeof value === 'number'
+        ? value.toLocaleString('es-MX')
+        : value;
+
+    // Get risk level badge
+    const getRiskBadge = (level) => {
+        if (!level || level === 'N/A') return null;
+
+        const badges = {
+            'Low': { text: 'Bajo', color: 'bg-green-500/20 text-green-400 border-green-500/30' },
+            'Medium': { text: 'Medio', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
+            'High': { text: 'Alto', color: 'bg-red-500/20 text-red-400 border-red-500/30' }
+        };
+
+        const badge = badges[level];
+        if (!badge) return null;
+
+        return (
+            <span className={`text-xs px-2 py-0.5 rounded-full border ${badge.color} font-medium`}>
+                {badge.text}
+            </span>
+        );
+    };
+
+    return (
+        <div className="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-white/5">
+            <div className="flex items-center gap-3">
+                <div className={classNames("p-2 rounded-full bg-opacity-20", colorClass.replace('text-', 'bg-'))}>
+                    <Icon className={classNames("w-5 h-5", colorClass)} />
+                </div>
+                <span className="text-gray-300 text-sm">{label}</span>
             </div>
-            <span className="text-gray-300 text-sm">{label}</span>
+            <div className="flex items-center gap-2">
+                <span className={classNames("font-bold text-lg", colorClass)}>{formattedValue}</span>
+                {getRiskBadge(level)}
+            </div>
         </div>
-        <span className={classNames("font-bold text-lg", colorClass)}>{value}</span>
-    </div>
-);
+    );
+};
 
 const CityStatsModal = ({ city, onClose }) => {
     if (!city) return null;
@@ -139,22 +169,42 @@ const CityStatsModal = ({ city, onClose }) => {
                                     icon={AlertTriangle}
                                     label="Secuestro"
                                     value={city.stats.kidnapping}
-                                    colorClass={getSeverityColor(city.stats.kidnapping)}
+                                    colorClass={getSeverityColor(city.stats.kidnappingLevel)}
+                                    level={city.stats.kidnappingLevel}
                                 />
                                 <StatRow
                                     icon={Shield}
                                     label="Robo"
-                                    value={city.stats.theft}
-                                    colorClass={getSeverityColor(city.stats.theft)}
+                                    value={city.stats.robbery}
+                                    colorClass={getSeverityColor(city.stats.robberyLevel)}
+                                    level={city.stats.robberyLevel}
                                 />
                                 <StatRow
                                     icon={Skull}
                                     label="Homicidio"
                                     value={city.stats.homicide}
-                                    colorClass={getSeverityColor(city.stats.homicide)}
+                                    colorClass={getSeverityColor(city.stats.homicideLevel)}
+                                    level={city.stats.homicideLevel}
+                                />
+                                <StatRow
+                                    icon={Shield}
+                                    label="Despojo"
+                                    value={city.stats.despojo}
+                                    colorClass={getSeverityColor(city.stats.despojoLevel)}
+                                    level={city.stats.despojoLevel}
                                 />
                             </>
                         )}
+                    </div>
+
+                    {/* Data Source Attribution */}
+                    <div className="mt-4 p-3 bg-gray-900/40 rounded-lg border border-gray-700/30">
+                        <p className="text-gray-400 text-xs leading-relaxed">
+                            <span className="font-semibold text-gray-300">📊 Fuente de datos:</span> Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP)
+                        </p>
+                        <p className="text-gray-500 text-xs mt-1">
+                            {city.stats.dataPeriod || 'Datos de los últimos 12 meses'} • Actualizado: {city.stats.lastUpdated || 'Enero 2026'}
+                        </p>
                     </div>
 
                     <div className="mt-6 p-4 bg-blue-900/20 rounded-xl border border-blue-500/20">

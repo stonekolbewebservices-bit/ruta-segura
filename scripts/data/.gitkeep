@@ -1,0 +1,12 @@
+# Placeholder para CSV del SESNSP
+
+Este archivo es un placeholder. 
+
+## 📥 Para actualizar los datos:
+
+1. Descarga el CSV más reciente de https://datos.gob.mx
+2. Busca "SESNSP incidencia delictiva municipal"
+3. Guarda el archivo aquí como `sesnsp_raw.csv`
+4. Ejecuta `npm run update-sesnsp`
+
+Ver instrucciones completas en: `../DOWNLOAD_INSTRUCTIONS.md`

@@ -244,13 +244,42 @@ export const getSafetyRoute = async (origin, destination) => {
         .filter(s => s.type === 'high' || s.type === 'medium')
         .reduce((sum, seg) => sum + (seg.riskScore || 0), 0);
 
+    // Calculate average crime rates per 100k inhabitants for the route
+    let totalRobberies = 0;
+    let totalHomicides = 0;
+    let totalKidnappings = 0;
+    let totalPopulation = 0;
+
+    segments.forEach(segment => {
+        if (segment.nearbyMunicipalities && segment.nearbyMunicipalities.length > 0) {
+            segment.nearbyMunicipalities.forEach(muni => {
+                // Safety check: ensure muni.data exists
+                if (!muni || !muni.data) return;
+
+                const pop = muni.data.population || 100000;
+                totalRobberies += muni.data.robo || 0;
+                totalHomicides += muni.data.homicidio_doloso || 0;
+                totalKidnappings += muni.data.secuestro || 0;
+                totalPopulation += pop;
+            });
+        }
+    });
+
+    // Calculate per-capita rates
+    const crimeRates = totalPopulation > 0 ? {
+        robberies: Math.round((totalRobberies / totalPopulation) * 100000),
+        homicides: Math.round((totalHomicides / totalPopulation) * 100000),
+        kidnappings: Math.round((totalKidnappings / totalPopulation) * 100000)
+    } : null;
+
     return {
         segments: segments,
         stats: {
             distance: `${distanceKm} km`,
             duration: `${durationHours}h ${durationMins}m`,
             safetyScore: safetyScore,
-            incidentsLastMonth: Math.round(totalIncidents / 10) // Scaled from risk scores
+            incidentsLastMonth: Math.round(totalIncidents / 10), // Scaled from risk scores
+            crimeRates: crimeRates  // Add crime rates per 100k
         },
         markers: markers
     };

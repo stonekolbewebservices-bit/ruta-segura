@@ -29,6 +29,11 @@ export const findNearbyMunicipalities = (coordinates, maxDistance = 100, limit =
     const municipalities = [];
 
     for (const [name, data] of Object.entries(db.municipalities)) {
+        // Skip municipalities without coordinates
+        if (!data.coordinates || !Array.isArray(data.coordinates) || data.coordinates.length < 2) {
+            continue;
+        }
+
         const distance = calculateDistance(coordinates, data.coordinates);
 
         if (distance <= maxDistance) {
@@ -57,10 +62,18 @@ const calculateRiskScore = (municipalData) => {
     // Tasas por cada 100,000 habitantes
     const homicideRate = (municipalData.homicidio_doloso / population) * 100000;
     const kidnappingRate = (municipalData.secuestro / population) * 100000;
-    const theftRate = (municipalData.robo_vehiculo / population) * 100000;
+    const robberyRate = (municipalData.robo / population) * 100000;
 
-    // Pesos: homicidio (40%), secuestro (35%), robo (25%)
-    const score = (homicideRate * 0.4) + (kidnappingRate * 3.5) + (theftRate * 0.025);
+    // Ponderación ajustada para reflejar gravedad de delitos:
+    // - Homicidio: 50% (más grave)
+    // - Secuestro: 30% (muy grave)
+    // - Robo: 20% (común pero importante)
+    // 
+    // Multiplicadores ajustados para que los scores sean comparables:
+    // - Homicidio: x2 (muy alto impacto)
+    // - Secuestro: x10 (menos frecuente pero muy grave)
+    // - Robo: x0.01 (muy frecuente, menor peso individual)
+    const score = (homicideRate * 2.0) + (kidnappingRate * 10.0) + (robberyRate * 0.01);
 
     // Normalizar a escala 0-100
     return Math.min(100, Math.max(0, score));
@@ -72,16 +85,21 @@ const calculateRiskScore = (municipalData) => {
  * @returns {Object} { level: 'low'|'medium'|'high', score: number, nearbyMunicipalities: Array }
  */
 export const calculateSegmentRiskLevel = (segmentCoordinates) => {
+    console.log('🚀 calculateSegmentRiskLevel CALLED with', segmentCoordinates?.length, 'coordinates');
+
     if (!segmentCoordinates || segmentCoordinates.length === 0) {
+        console.log('❌ No coordinates provided');
         return { level: 'low', score: 0, nearbyMunicipalities: [] };
     }
 
-    // Tomar punto medio del segmento
+    // Usar el punto medio del segmento para buscar municipios cercanos
     const midIndex = Math.floor(segmentCoordinates.length / 2);
     const midPoint = segmentCoordinates[midIndex];
+    console.log('📍 Midpoint:', midPoint);
 
     // Encontrar municipios cercanos (dentro de 100km)
     const nearbyMunicipalities = findNearbyMunicipalities(midPoint, 100, 3);
+    console.log('🏘️ Found', nearbyMunicipalities.length, 'nearby municipalities');
 
     if (nearbyMunicipalities.length === 0) {
         // Si no hay municipios cercanos, asumir riesgo bajo
@@ -103,13 +121,25 @@ export const calculateSegmentRiskLevel = (segmentCoordinates) => {
 
     const finalScore = totalWeight > 0 ? weightedScore / totalWeight : 0;
 
-    // Clasificar nivel de riesgo
+    // Clasificar nivel de riesgo (ajustado para ser menos alarmista)
     let level = 'low';
-    if (finalScore >= 60) {
+    if (finalScore >= 25) {  // Aumentado de 15 a 25 para reducir falsos positivos
         level = 'high';
-    } else if (finalScore >= 30) {
+    } else if (finalScore >= 12) {  // Aumentado de 8 a 12
         level = 'medium';
     }
+
+    // DEBUG: Log para ver qué está pasando
+    console.log('🔍 Segment Risk Calculation:', {
+        nearbyCount: nearbyMunicipalities.length,
+        finalScore: finalScore.toFixed(2),
+        level,
+        nearbyMunicipalities: nearbyMunicipalities.map(m => ({
+            name: m.name,
+            distance: m.distance.toFixed(1),
+            riskLevel: m.data.risk_level
+        }))
+    });
 
     return {
         level,
@@ -137,7 +167,8 @@ export const getSegmentRealStats = (segmentCoordinates) => {
     // Obtener el municipio más cercano para estadísticas
     const midIndex = Math.floor(segmentCoordinates.length / 2);
     const midPoint = segmentCoordinates[midIndex];
-    const nearest = findNearbyMunicipalities(midPoint, 100, 1)[0];
+    const nearbyResults = findNearbyMunicipalities(midPoint, 100, 1);
+    const nearest = nearbyResults.length > 0 ? nearbyResults[0] : null;
 
     if (!nearest) return null;
 
@@ -147,7 +178,7 @@ export const getSegmentRealStats = (segmentCoordinates) => {
     // Calcular incidentes estimados para el tramo (proporcional a la población y distancia)
     const scaleFactor = 0.01; // Factor de escala para estimar incidentes en tramo vs. municipio completo
 
-    const assaults = Math.round((municipalData.robo_transeúnte || 0) * scaleFactor);
+    const assaults = Math.round((municipalData.robo || 0) * scaleFactor);
     const disappearances = Math.round((municipalData.secuestro || 0) * scaleFactor);
 
     let desc = '';
@@ -163,7 +194,7 @@ export const getSegmentRealStats = (segmentCoordinates) => {
         type: 'hazard',
         title: desc,
         stats: {
-            assaults: Math.max(1, assaults),
+            assaults: assaults,  // Removido Math.max(1, ...) para mostrar valor real
             disappearances: Math.max(0, disappearances),
             period: `Últimos 12 meses (Fuente: SESNSP)`,
             municipality: nearest.name,
